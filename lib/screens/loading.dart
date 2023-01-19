@@ -25,7 +25,6 @@ class _LoadingState extends State<Loading> {
             backgroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
           ),
         ),
-      )
-    );
+      );
   }
 }
