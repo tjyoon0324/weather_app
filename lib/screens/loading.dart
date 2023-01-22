@@ -10,29 +10,43 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
 
-  void getLocation() async{
-    LocationPermission permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    print(position);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLocation();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            print('Button pushed');
-            getLocation();
-          },
-          child: Text(
-            'Get my location',
-            style: TextStyle(color: Colors.white),
-          ),
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
-        ),
-      ),
-    );
+  void getLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      print(position);
+    } catch (e) {
+      print("Error in internet connection");
+    }
   }
 }
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: Center(
+      child: ElevatedButton(
+        onPressed: null,
+        // () {
+        // print('Button pushed');
+        // getLocation();
+        // },
+
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
+        child: Text(
+          'Get my location',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    ),
+  );
+}}
