@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/data/my_location.dart';
 import 'package:weather_app/data/network.dart';
+import 'package:weather_app/screens/weather_screen.dart';
 
-const apiKey = '18e6f2479f3f8dbb0777a602ff31145b';
-const exclude = 'current';
+const apiKey = '56a18378c4e14b556522093801ad9295';
 
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);
@@ -21,7 +21,6 @@ class _LoadingState extends State<Loading> {
     // TODO: implement initState
     super.initState();
     getLocation();
-    // fetchData();
   }
 
   void getLocation() async {
@@ -32,14 +31,14 @@ class _LoadingState extends State<Loading> {
     print(latitude3);
     print(longitude3);
     Network network = Network(
-        'https://api.openweathermap.org/data/3.0/onecall?lat=$latitude3&lon=$longitude3&exclude={}&appid=$apiKey');
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude3&lon=$longitude3&appid=$apiKey&units=metric');
     var weatherData = await network.getJsondata();
     print(weatherData);
-  }
 
-  // void fetchData() async {
-  //
-  // }
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return WeatherScreen(parseWeatherData: weatherData,);
+    }));
+  }
 
   @override
   Widget build(BuildContext context) {
