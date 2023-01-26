@@ -8,29 +8,22 @@ class MyLocation {
   Future<void> getMyCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
     print(permission);
-    if (permission == LocationPermission.denied){
-        Map<Permission, PermissionStatus> status = await[Permission.location,].request();
-        try {
-          Position position = await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high);
-          latitude2 = position.latitude;
-          longitude2 = position.longitude;
-          print(latitude2);
-          print(longitude2);
-        } catch (e) {
-          print("Error in internet connection");
-        }
-    }else{
-      try {
-        Position position = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high);
-        latitude2 = position.latitude;
-        longitude2 = position.longitude;
-        print(latitude2);
-        print(longitude2);
-      } catch (e) {
-        print("Error in internet connection");
-      }
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever ||
+        permission == LocationPermission.unableToDetermine) {
+      Map<Permission, PermissionStatus> status = await [
+        Permission.location,
+      ].request();
+    }
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      latitude2 = position.latitude;
+      longitude2 = position.longitude;
+      print(latitude2);
+      print(longitude2);
+    } catch (e) {
+      print("Error in internet connection");
     }
   }
 }
