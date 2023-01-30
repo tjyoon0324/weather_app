@@ -6,9 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:weather_app/model/model.dart';
 
 class WeatherScreen extends StatefulWidget {
-  final parseWeatherData;
+  WeatherScreen({this.parseWeatherData, this.parseAirPollution});
 
-  WeatherScreen({this.parseWeatherData});
+  final parseWeatherData;
+  final parseAirPollution;
 
   @override
   State<WeatherScreen> createState() => _WeatherScreenState();
@@ -19,22 +20,41 @@ class _WeatherScreenState extends State<WeatherScreen> {
   String cityName = '';
   int temp = 0;
   var date = DateTime.now();
+  String des = '';
   Widget icon = SvgPicture.asset('svg/icon.svg');
+  Widget airIcon = Image.asset('images/background.jpg');
+  Widget airState = Text(
+    '데이터 없음',
+    style: TextStyle(
+      color: Colors.black87,
+      fontWeight: FontWeight.bold,
+    ),
+  );
+  double dust1 = 0.0;
+  double dust2 = 0.0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     print(widget.parseWeatherData);
-    updateData(widget.parseWeatherData);
+    updateData(widget.parseWeatherData, widget.parseAirPollution);
   }
 
-  void updateData(dynamic weatherData) {
+  void updateData(dynamic weatherData, dynamic airData) {
     cityName = weatherData['name'];
     double temp2 = weatherData['main']['temp'];
-    int condition = weatherData['weather'][0]['id'];
     temp = temp2.round();
+    int condition = weatherData['weather'][0]['id'];
+    des = weatherData['weather'][0]['description'];
+    int index = airData['list'][0]['main']['aqi'];
+    dust1 = airData['list'][0]['components']['pm2_5'];
+    dust2 = airData['list'][0]['components']['pm10'];
+    // print(dust1);
+
     icon = model.getWeatherIcon(condition);
+    airIcon = model.getAirIcon(index);
+    airState = model.getAirCondition(index);
 
     print(cityName);
     print(temp);
@@ -142,7 +162,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                   width: 10.0,
                                 ),
                                 Text(
-                                  'clear sky',
+                                  '$des',
                                   style: GoogleFonts.lato(
                                     fontSize: 16.0,
                                     color: Colors.white,
@@ -180,22 +200,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               SizedBox(
                                 height: 10.0,
                               ),
-                              Image.asset(
-                                'images/bad.png',
-                                width: 37.0,
-                                height: 35.0,
-                              ),
+                              airIcon,
                               SizedBox(
                                 height: 10.0,
                               ),
-                              Text(
-                                '매우나쁨',
-                                style: GoogleFonts.lato(
-                                  fontSize: 14.0,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
+                              airState
                             ],
                           ),
                           Column(
@@ -211,7 +220,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 height: 10.0,
                               ),
                               Text(
-                                '174.05',
+                                '$dust1',
                                 style: GoogleFonts.lato(
                                   fontSize: 24.0,
                                   color: Colors.white,
@@ -243,7 +252,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 height: 10.0,
                               ),
                               Text(
-                                '84.03',
+                                '$dust2',
                                 style: GoogleFonts.lato(
                                   fontSize: 24.0,
                                   color: Colors.white,

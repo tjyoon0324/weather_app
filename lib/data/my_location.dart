@@ -6,15 +6,7 @@ class MyLocation {
   double? longitude2;
 
   Future<void> getMyCurrentLocation() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    print(permission);
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever ||
-        permission == LocationPermission.unableToDetermine) {
-      Map<Permission, PermissionStatus> status = await [
-        Permission.location,
-      ].request();
-    }
+    LocationPermission permission = await Geolocator.requestPermission();
     try {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
